@@ -2,6 +2,7 @@ package com.tutorialpoint;
 
 /*
  * https://www.tutorialspoint.com/restful/
+ * Follow above link steps to setup tomcat , postman 
  */
 
 import java.io.Serializable;

@@ -3,19 +3,20 @@ package com.tutorialpoint;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.POST;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
-@Produces({"application/json"})
 public interface PatientService {
 
 	//http://localhost:9090/UserManagment/rest/PatientService/patients/123
 	@GET
 	@Path("/patients/{id}/")
+	@Produces(MediaType.APPLICATION_JSON)
 	Patient getPatient(@PathParam("id") String id);
 
 	/*
@@ -30,6 +31,7 @@ public interface PatientService {
 	 */
 	@PUT
 	@Path("/patients/")
+	@Consumes(MediaType.APPLICATION_JSON)
 	Response updatePatient(Patient patient);
 
 	/*
@@ -50,6 +52,7 @@ public interface PatientService {
 	
 	@POST
 	@Path("/patients/")
+	@Consumes(MediaType.APPLICATION_JSON)
 	Response addPatient(Patient patient);
 	
 	/*

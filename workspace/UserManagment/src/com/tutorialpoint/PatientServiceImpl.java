@@ -30,8 +30,10 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	public Response addPatient(Patient patient) {
-		System.out.println("...invoking addPatient, Patient Name is... " + patient.getName());
+		System.out.println("...invoking addPatient, Patient Name is... " + patient.getName()+" Patient Id is "+patient.getId());
 		patient.setId(++currentId);
+		System.out.println("currentId :"+currentId);
+		System.out.println("PatientId after update "+patient.getId());
 		patients.put(patient.getId(), patient);
 		return Response.ok(patient).build();
 	}
@@ -43,14 +45,15 @@ public class PatientServiceImpl implements PatientService {
 		if(patient == null)
 		{
 			System.out.println("Check :"+Response.Status.NOT_FOUND);
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-			//throw new SomeBusinessException("User Not Found ");
+			//throw new NotFoundException();
+			//throw new WebApplicationException(Response.Status.NOT_FOUND);
+			throw new SomeBusinessException("User Not Found ");
 		}
 		return patient;
 	}
 
 	public Response updatePatient(Patient updatedPatient) {
-		System.out.println("...invoking updatePatient, Patient Name is... " + updatedPatient.getName());
+		System.out.println("...invoking updatePatient, Patient Name is... " + updatedPatient.getName()+" And Patient Id is "+updatedPatient.getId());
 
 		Patient currentPatient = patients.get(updatedPatient.getId());
 
@@ -60,7 +63,8 @@ public class PatientServiceImpl implements PatientService {
 			response = Response.ok().build();
 		} else {
 			//response = Response.notModified().build();
-			throw new NotFoundException();
+			throw new SomeBusinessException("Patient does not exist for patientId :"+updatedPatient.getId());
+			//throw new NotFoundException();
 		}
 
 		return response;
@@ -76,7 +80,7 @@ public class PatientServiceImpl implements PatientService {
 			response = Response.ok().build();
 		} else {
 			//response = Response.notModified().build();
-			throw new SomeBusinessException("Businesss Exception Message");
+			throw new SomeBusinessException("Patient does not exist for patientId :"+id);
 		}
 
 		return response;

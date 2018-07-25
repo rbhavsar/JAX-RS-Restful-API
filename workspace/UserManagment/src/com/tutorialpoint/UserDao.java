@@ -52,6 +52,7 @@ public class UserDao {
       for(User user: userList){
          if(user.getId() == pUser.getId()){
             userExists = true;
+            System.out.println("User is already exist for id "+pUser.getId());
             break;
          }
       }		

@@ -43,11 +43,27 @@ public class UserService {
         <profession>sci1</profession>
     </user>
 	</users>
+	
+	JSON Response :
+	
+	[
+    {
+        "id": 1,
+        "name": "Mahesh",
+        "profession": "Teacher"
+    },
+    {
+        "id": 3,
+        "name": "bhavsar1",
+        "profession": "maths1"
+    }
+	]
+	
     */
    
    @GET
    @Path("/users")
-   @Produces(MediaType.APPLICATION_XML)
+   @Produces(MediaType.APPLICATION_JSON)
    public List<User> getUsers(){
       return userDao.getAllUsers();
    }
@@ -64,9 +80,9 @@ public class UserService {
 
    @GET
    @Path("/users/{userid}")
-   @Produces(MediaType.APPLICATION_XML)
+   @Produces(MediaType.APPLICATION_JSON)
    public User getUser(@PathParam("userid") int userid){
-	   
+	  System.out.println("Invoking getUser for userId :"+userid); 
 	  User user = userDao.getUser(userid);
 	  if(user==null) {
 		  throw new NotFoundException();
@@ -84,32 +100,42 @@ public class UserService {
     * profession - Teacher
     * Click on Send
     * Response :<result>success</result>
+    * 
+    * Response for failure :
+    * {
+    "errorCode": 400,
+    "errorMessage": "User is already exist :3"
+	}
     */
 
    @POST
    @Path("/users")
-   @Produces(MediaType.APPLICATION_XML)
+   @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
    public String createUser(@FormParam("id") int id,
       @FormParam("name") String name,
       @FormParam("profession") String profession,
       @Context HttpServletResponse servletResponse) throws IOException{
+	  System.out.println("Invoking createUser ,id is "+id);
       User user = new User(id, name, profession);
       int result = userDao.addUser(user);
       if(result == 1){
          return SUCCESS_RESULT;
       }
-      return FAILURE_RESULT;
+      else {
+    	  throw new SomeBusinessException("User is already exist for id :"+id);
+      }
    }
    
    /*
     * http://localhost:9090/UserManagment/rest/UserService/users
     * In Postman ->
-    * Body - > x-www-form-urlencoded screen
-    * Configure below key value pair
-    * id - 3
-    * name - Sharma
-    * profession - Developer
+    * Body - > raw
+    {
+    "id": 1,
+    "name": "Mahesh1",
+    "profession": "Teacher1"
+	}
     * Click on Send
     * Response :<result>success</result>
     * 
@@ -118,12 +144,9 @@ public class UserService {
    @PUT
    @Path("/users")
    @Produces(MediaType.APPLICATION_XML)
-   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-   public String updateUser(@FormParam("id") int id,
-      @FormParam("name") String name,
-      @FormParam("profession") String profession,
-      @Context HttpServletResponse servletResponse) throws IOException{
-      User user = new User(id, name, profession);
+   @Consumes(MediaType.APPLICATION_JSON)
+   public String updateUser(User user) throws IOException{
+      //User user = new User(id, name, profession);
       int result = userDao.updateUser(user);
       if(result == 1){
          return SUCCESS_RESULT;

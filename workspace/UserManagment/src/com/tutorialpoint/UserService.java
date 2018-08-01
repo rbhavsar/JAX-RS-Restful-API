@@ -29,6 +29,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
@@ -36,12 +37,16 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.glassfish.jersey.internal.Errors.ErrorMessage;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.message.internal.MediaTypes;
 import org.glassfish.jersey.server.ContainerRequest;
+
+import com.tutorialpoint.exception.FaultInfo;
 
 import sun.misc.IOUtils;
 
@@ -270,11 +275,13 @@ public class UserService {
    @Path("/users/{userid}")
    @Produces(value = {MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})// To support xml reponse - added into Produces and while using postman - in headers make sure to set Accept - application/xml
    public User getUser(@PathParam("userid") int userid){
-	  System.out.println("Invoking getUser for userId :"+userid); 
+	   FaultInfo faultInfo = new FaultInfo(404,"user not found for given userId "+userid);
+	   Response response = Response.status(Status.NOT_FOUND).entity(faultInfo).build();
+	   System.out.println("Invoking getUser for userId :"+userid); 
 	  User user = userDao.getUser(userid);
 	  if(user==null) {
 		  //throw new NotFoundException();
-		  throw new SomeBusinessException("user not found for given userId "+userid);
+		  throw new WebApplicationException(response);
 	  }
       return user;
    }

@@ -3,6 +3,16 @@ package com.tutorialpoint.exception;
 public class FaultInfo {
 	private int errorCode; 
     private String errorMessage;
+    
+    public FaultInfo(int errorCode,String errorMessage) {
+    	this.errorCode=errorCode;
+    	this.errorMessage=errorMessage;
+    }
+    
+    public FaultInfo() {
+    	
+    }
+    
 	public int getErrorCode() {
 		return errorCode;
 	}

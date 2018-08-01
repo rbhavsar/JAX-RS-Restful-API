@@ -14,7 +14,7 @@ public class UserDao {
    public List<User> getAllUsers(){
       List<User> userList = null;
       try {
-         File file = new File("Users.dat");
+         File file = new File("Users.txt");
          if (!file.exists()) {
             User user = new User(1, "Mahesh", "Teacher");
             userList = new ArrayList<User>();
@@ -44,6 +44,32 @@ public class UserDao {
          }
       }
       return null;
+   }
+   
+   public List<User> getUsersPaginated(int start,int size){
+	   	 List<User> users = getAllUsers();
+	   	 System.out.println("start :"+start+"size :"+size);
+	   	 if(start+size>users.size()) {
+	   		 return users;
+	   	 }
+	   	 if(start==0 && size==0) {
+	   		 return users;
+	   	 }
+	   	 
+	   	System.out.println("sublist :"+users.subList(start, start+size));
+		return users.subList(start, start+size);
+   	}
+   
+   public User getUserBy(int id,String profession) {
+	   List<User> users=getAllUsers();
+	   System.out.println("In getUserBy...");
+	   for(User user:users) {
+		 if(user.getId()==id && user.getProfession().equalsIgnoreCase(profession)) {
+		 System.out.println("Codition true");
+		 return user;
+	  }
+	}
+	 return null;
    }
 
    public int addUser(User pUser){
@@ -94,7 +120,7 @@ public class UserDao {
 
    private void saveUserList(List<User> userList){
       try {
-         File file = new File("Users.dat");
+         File file = new File("Users.txt");
          FileOutputStream fos;
 
          fos = new FileOutputStream(file);

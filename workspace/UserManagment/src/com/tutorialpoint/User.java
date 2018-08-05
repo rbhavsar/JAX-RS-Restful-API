@@ -6,6 +6,10 @@ package com.tutorialpoint;
  */
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,9 +20,35 @@ public class User implements Serializable {
    private int id;
    private String name;
    private String profession;
+   //private Map<Long,Comment> comments=new HashMap<>();
+   List<Link> links = new ArrayList<>();
    
 
-   public User(){}
+   public List<Link> getLinks() {
+	return links;
+}
+
+   public void setLinks(List<Link> links) {
+	this.links = links;
+   }
+   
+   public void addLink(String url,String rel) {
+	   System.out.println("addlink, url:"+url+" And rel:"+rel);
+	   Link link = new Link();
+	   link.setLink(url);
+	   link.setRel(rel);
+	   System.out.println("g1 :"+link.getLink());
+	   System.out.println("g2 :"+link.getRel());
+	   try {
+	   links.add(link);}
+	   catch(Exception e){
+		   e.printStackTrace();
+	   }
+	   System.out.println("links :"+links);
+	   
+   }
+
+public User(){}
 
    public User(int id, String name, String profession){
       this.id = id;

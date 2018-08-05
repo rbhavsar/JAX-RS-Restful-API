@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -274,15 +275,23 @@ public class UserService {
    @GET
    @Path("/users/{userid}")
    @Produces(value = {MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})// To support xml reponse - added into Produces and while using postman - in headers make sure to set Accept - application/xml
-   public User getUser(@PathParam("userid") int userid){
+   public User getUser(@PathParam("userid") int userid,@Context UriInfo uriInfo){
 	   FaultInfo faultInfo = new FaultInfo(404,"user not found for given userId "+userid);
 	   Response response = Response.status(Status.NOT_FOUND).entity(faultInfo).build();
 	   System.out.println("Invoking getUser for userId :"+userid); 
-	  User user = userDao.getUser(userid);
-	  if(user==null) {
+	   User user = userDao.getUser(userid);
+	   String url = uriInfo.getBaseUriBuilder().path(UserService.class).build().toString();
+	   if(user==null) {
 		  //throw new NotFoundException();
 		  throw new WebApplicationException(response);
-	  }
+	   }
+	   else // Check https://www.youtube.com/watch?v=Mp6LpIg7h84 - Add List of Link
+	   {
+		  Link links = new Link(url,"self");
+		  List<Link> list=new ArrayList<Link>();
+		  list.add(links);
+		  user.setLinks(list);
+	   }
       return user;
    }
    
